@@ -1,0 +1,18 @@
+{
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "Default": "server=localhost;port=3306;database=LighthouseOpenIddct;user=root;password=YOUR_MYSQL_PASSWORD;TreatTinyAsBoolean=true"
+  },
+  "ProductAClient": {
+    "ClientId": "product-a-backend",
+    "ClientSecret": "YOUR_CLIENT_SECRET",
+    "RedirectUri": "http://localhost:4000/auth/callback",
+    "PostLogoutRedirectUri": "http://localhost:4000/"
+  }
+}

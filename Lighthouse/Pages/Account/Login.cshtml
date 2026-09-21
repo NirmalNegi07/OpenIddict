@@ -1,0 +1,35 @@
+@page
+@model Lighthouse.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Sign in to Lighthouse";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h1 class="mb-4">Sign in to Lighthouse</h1>
+        <p class="text-muted">You're being asked to sign in because a client application (e.g. Product A) requested access.</p>
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label"></label>
+                <input asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+
+        <hr />
+        <p class="text-muted small">
+            Seeded test account: <code>test@lighthouse.local</code> / <code>Passw0rd!</code>
+        </p>
+    </div>
+</div>
