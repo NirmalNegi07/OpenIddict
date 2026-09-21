@@ -17,15 +17,21 @@ public class AuthorizationController : Controller
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly IOpenIddictScopeManager _scopeManager;
+    private readonly IOpenIddictApplicationManager _applicationManager;
+    private readonly IOpenIddictAuthorizationManager _authorizationManager;
 
     public AuthorizationController(
         SignInManager<IdentityUser> signInManager,
         UserManager<IdentityUser> userManager,
-        IOpenIddictScopeManager scopeManager)
+        IOpenIddictScopeManager scopeManager,
+        IOpenIddictApplicationManager applicationManager,
+        IOpenIddictAuthorizationManager authorizationManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _scopeManager = scopeManager;
+        _applicationManager = applicationManager;
+        _authorizationManager = authorizationManager;
     }
 
     [HttpGet("~/connect/authorize")]
@@ -73,6 +79,37 @@ public class AuthorizationController : Controller
             resources.Add(resource);
         }
         principal.SetResources(resources);
+
+        // Reuse an existing valid authorization for this user+client+scopes instead of
+        // creating a new OpenIddictAuthorizations row on every login. Without this, each
+        // sign-in gets attached to a brand new authorization (OpenIddict creates one
+        // automatically whenever the principal doesn't already carry an authorization id),
+        // even though it's the same grant every time.
+        var application = await _applicationManager.FindByClientIdAsync(request.ClientId!) ??
+            throw new InvalidOperationException("The calling client application cannot be found.");
+        var applicationId = await _applicationManager.GetIdAsync(application) ??
+            throw new InvalidOperationException("The application id could not be resolved.");
+
+        object? authorization = null;
+        await foreach (var existing in _authorizationManager.FindAsync(
+            subject: await _userManager.GetUserIdAsync(user),
+            client: applicationId,
+            status: Statuses.Valid,
+            type: AuthorizationTypes.Permanent,
+            scopes: principal.GetScopes()))
+        {
+            authorization = existing;
+            break;
+        }
+
+        authorization ??= await _authorizationManager.CreateAsync(
+            principal: principal,
+            subject: await _userManager.GetUserIdAsync(user),
+            client: applicationId,
+            type: AuthorizationTypes.Permanent,
+            scopes: principal.GetScopes());
+
+        principal.SetAuthorizationId(await _authorizationManager.GetIdAsync(authorization));
 
         foreach (var claim in principal.Claims)
         {
