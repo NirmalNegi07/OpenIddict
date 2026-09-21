@@ -1,35 +1,33 @@
 @page
 @model Lighthouse.Pages.Account.LoginModel
 @{
-    ViewData["Title"] = "Sign in to Lighthouse";
+    ViewData["Title"] = "Sign in";
+    Layout = "_Layout";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <h1 class="mb-4">Sign in to Lighthouse</h1>
-        <p class="text-muted">You're being asked to sign in because a client application (e.g. Product A) requested access.</p>
+<div class="auth-card">
+    <h1>Sign in to Lighthouse</h1>
+    <p class="subtitle">A client application has asked you to sign in before it can continue.</p>
 
-        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
-            <div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="All" class="validation-summary-errors"></div>
 
-            <div class="mb-3">
-                <label asp-for="Input.Email" class="form-label"></label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
+    <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <div class="field">
+            <label asp-for="Input.Email">Email</label>
+            <input asp-for="Input.Email" autocomplete="username" autofocus />
+            <span asp-validation-for="Input.Email" class="field-validation-error"></span>
+        </div>
 
-            <div class="mb-3">
-                <label asp-for="Input.Password" class="form-label"></label>
-                <input asp-for="Input.Password" type="password" class="form-control" autocomplete="current-password" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
+        <div class="field">
+            <label asp-for="Input.Password">Password</label>
+            <input asp-for="Input.Password" type="password" autocomplete="current-password" />
+            <span asp-validation-for="Input.Password" class="field-validation-error"></span>
+        </div>
 
-            <button type="submit" class="btn btn-primary">Sign in</button>
-        </form>
+        <button type="submit" class="btn">Sign in</button>
+    </form>
 
-        <hr />
-        <p class="text-muted small">
-            Seeded test account: <code>test@lighthouse.local</code> / <code>Passw0rd!</code>
-        </p>
-    </div>
+    <p class="hint">
+        Seeded test account: <code>test@lighthouse.local</code> / <code>Passw0rd!</code>
+    </p>
 </div>

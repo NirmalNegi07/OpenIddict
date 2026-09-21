@@ -1,10 +1,17 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero">
+    <h1>Lighthouse</h1>
+    <p>The central identity provider for this experiment. It doesn't do anything on its own &mdash;
+       client applications like Product A redirect users here to sign in via OAuth2 / OpenID Connect.</p>
+    <div class="pill-row">
+        <span class="pill">Authorization Code + PKCE</span>
+        <span class="pill">OpenIddict</span>
+        <span class="pill">ASP.NET Core Identity</span>
+        <span class="pill">MySQL</span>
+    </div>
 </div>
